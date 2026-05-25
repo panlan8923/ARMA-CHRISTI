@@ -81,10 +81,10 @@ async function draw(e) {
   const pos = getPosition(e);
 
   const data = {
-    x1: lastX,
-    y1: lastY,
-    x2: pos.x,
-    y2: pos.y,
+    x1: lastX / canvas.width,
+    y1: lastY / canvas.height,
+    x2: pos.x / canvas.width,
+    y2: pos.y / canvas.height,
   };
 
   // 上传到 Firebase
@@ -105,9 +105,12 @@ function renderLine(data) {
 
   ctx.beginPath();
 
-  ctx.moveTo(data.x1, data.y1);
+  ctx.moveTo(data.x1 * canvas.width, data.y1 * canvas.height);
 
-  ctx.lineTo(data.x2 + offsetX, data.y2 + offsetY);
+  ctx.lineTo(
+    data.x2 * canvas.width + offsetX,
+    data.y2 * canvas.height + offsetY,
+  );
 
   ctx.stroke();
 
