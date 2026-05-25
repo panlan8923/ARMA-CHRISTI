@@ -73,27 +73,31 @@ function stopDrawing(e) {
 }
 
 // 画线
-async function draw(e) {
+function draw(e) {
   if (!drawing) return;
 
   e.preventDefault();
 
   const pos = getPosition(e);
 
+  const startX = lastX;
+  const startY = lastY;
+  const endX = pos.x;
+  const endY = pos.y;
+
+  // 先立刻更新 lastX / lastY，避免所有线从同一个点发散
+  lastX = endX;
+  lastY = endY;
+
   const data = {
-    x1: lastX / canvas.width,
-    y1: lastY / canvas.height,
-    x2: pos.x / canvas.width,
-    y2: pos.y / canvas.height,
+    x1: startX / canvas.width,
+    y1: startY / canvas.height,
+    x2: endX / canvas.width,
+    y2: endY / canvas.height,
   };
 
-  // 上传到 Firebase
-  await addDoc(collection(db, "strokes"), data);
-
-  lastX = pos.x;
-  lastY = pos.y;
+  addDoc(collection(db, "strokes"), data);
 }
-
 // 真正绘制
 function renderLine(data) {
   const jitter = 10;
