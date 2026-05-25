@@ -13,3 +13,17 @@ canvas {
   display: block;
   touch-action: none;
 }
+#submitBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  background: white;
+  color: black;
+  border: none;
+
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
