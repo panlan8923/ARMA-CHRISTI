@@ -14,16 +14,30 @@ canvas {
   touch-action: none;
 }
 #submitBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
+  #submitBtn {
+    position: fixed;
 
-  background: white;
-  color: black;
-  border: none;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
 
-  padding: 12px 20px;
-  font-size: 16px;
-  cursor: pointer;
+    z-index: 9999;
+
+    background: white;
+    color: black;
+
+    border: none;
+    border-radius: 999px;
+
+    padding: 16px 32px;
+
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  }
 }
