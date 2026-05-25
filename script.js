@@ -1,14 +1,12 @@
-// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getFirestore,
   collection,
   addDoc,
-  onSnapshot,
+  serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAZVhboBByfpVQnZFLZYBqFjyVVjvvd08M",
   authDomain: "arma-christi-wall.firebaseapp.com",
@@ -19,26 +17,26 @@ const firebaseConfig = {
   measurementId: "G-5GBRR963ER",
 };
 
-// Init Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Canvas
 const canvas = document.getElementById("draw");
 const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-ctx.strokeStyle = "white";
-ctx.lineCap = "round";
-ctx.lineJoin = "round";
+const submitBtn = document.getElementById("submitBtn");
 
 let drawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// 获取位置
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+resizeCanvas();
+
 function getPosition(e) {
   if (e.touches && e.touches.length > 0) {
     return {
@@ -53,26 +51,21 @@ function getPosition(e) {
   };
 }
 
-// 开始画
 function startDrawing(e) {
   e.preventDefault();
 
-  drawing = true;
-
   const pos = getPosition(e);
 
+  drawing = true;
   lastX = pos.x;
   lastY = pos.y;
 }
 
-// 停止画
 function stopDrawing(e) {
-  e.preventDefault();
-
+  if (e) e.preventDefault();
   drawing = false;
 }
 
-// 画线
 function draw(e) {
   if (!drawing) return;
 
@@ -80,51 +73,25 @@ function draw(e) {
 
   const pos = getPosition(e);
 
-  const startX = lastX;
-  const startY = lastY;
-  const endX = pos.x;
-  const endY = pos.y;
-
-  // 先立刻更新 lastX / lastY，避免所有线从同一个点发散
-  lastX = endX;
-  lastY = endY;
-
-  const data = {
-    x1: startX / canvas.width,
-    y1: startY / canvas.height,
-    x2: endX / canvas.width,
-    y2: endY / canvas.height,
-  };
-
-  addDoc(collection(db, "strokes"), data);
-}
-// 真正绘制
-function renderLine(data) {
   const jitter = 10;
-
   const offsetX = (Math.random() - 0.5) * jitter;
   const offsetY = (Math.random() - 0.5) * jitter;
 
+  ctx.strokeStyle = "white";
   ctx.lineWidth = 12 + Math.random() * 14;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
 
   ctx.beginPath();
-
-  ctx.moveTo(data.x1 * canvas.width, data.y1 * canvas.height);
-
-  ctx.lineTo(
-    data.x2 * canvas.width + offsetX,
-    data.y2 * canvas.height + offsetY,
-  );
-
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(pos.x + offsetX, pos.y + offsetY);
   ctx.stroke();
 
-  // 炭笔颗粒
   for (let i = 0; i < 8; i++) {
     ctx.beginPath();
-
     ctx.arc(
-      data.x2 + (Math.random() - 0.5) * 24,
-      data.y2 + (Math.random() - 0.5) * 24,
+      pos.x + (Math.random() - 0.5) * 24,
+      pos.y + (Math.random() - 0.5) * 24,
       Math.random() * 2,
       0,
       Math.PI * 2,
@@ -133,31 +100,53 @@ function renderLine(data) {
     ctx.fillStyle = "rgba(255,255,255,0.08)";
     ctx.fill();
   }
+
+  lastX = pos.x;
+  lastY = pos.y;
 }
 
-// 实时监听 Firebase
-onSnapshot(collection(db, "strokes"), (snapshot) => {
-  snapshot.docChanges().forEach((change) => {
-    if (change.type === "added") {
-      renderLine(change.doc.data());
-    }
-  });
-});
+async function submitTrace() {
+  submitBtn.disabled = true;
+  submitBtn.textContent = "submitting...";
 
-// 鼠标
+  try {
+    const imageData = canvas.toDataURL("image/jpeg", 0.7);
+
+    await addDoc(collection(db, "artworks"), {
+      imageData: imageData,
+      createdAt: serverTimestamp(),
+      width: canvas.width,
+      height: canvas.height,
+      userAgent: navigator.userAgent,
+    });
+
+    submitBtn.textContent = "submitted";
+
+    setTimeout(() => {
+      submitBtn.textContent = "submit trace";
+      submitBtn.disabled = false;
+    }, 1500);
+  } catch (error) {
+    console.error("Submit failed:", error);
+    submitBtn.textContent = "failed";
+
+    setTimeout(() => {
+      submitBtn.textContent = "submit trace";
+      submitBtn.disabled = false;
+    }, 1500);
+  }
+}
+
 canvas.addEventListener("mousedown", startDrawing);
 canvas.addEventListener("mousemove", draw);
 canvas.addEventListener("mouseup", stopDrawing);
 canvas.addEventListener("mouseleave", stopDrawing);
 
-// 手机
 canvas.addEventListener("touchstart", startDrawing, { passive: false });
 canvas.addEventListener("touchmove", draw, { passive: false });
 canvas.addEventListener("touchend", stopDrawing, { passive: false });
 canvas.addEventListener("touchcancel", stopDrawing, { passive: false });
 
-// Resize
-window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+submitBtn.addEventListener("click", submitTrace);
+
+window.addEventListener("resize", resizeCanvas);
