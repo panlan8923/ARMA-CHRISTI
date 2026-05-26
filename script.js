@@ -23,16 +23,21 @@ const db = getFirestore(app);
 const canvas = document.getElementById("draw");
 const ctx = canvas.getContext("2d");
 const submitBtn = document.getElementById("submitBtn");
+const navGalleryBtn = document.getElementById("navGallery");
 
 let drawing = false;
 let lastX = 0;
 let lastY = 0;
+let hasUnsavedChanges = false;
+let isSubmitting = false;
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // If the canvas is resized, its content is cleared, so consider it "saved/empty".
+  hasUnsavedChanges = false;
 }
 
 resizeCanvas();
@@ -59,6 +64,7 @@ function startDrawing(e) {
   drawing = true;
   lastX = pos.x;
   lastY = pos.y;
+  hasUnsavedChanges = true;
 }
 
 function stopDrawing(e) {
@@ -106,6 +112,7 @@ function draw(e) {
 }
 
 async function submitTrace() {
+  isSubmitting = true;
   submitBtn.disabled = true;
   submitBtn.textContent = "submitting...";
 
@@ -121,6 +128,7 @@ async function submitTrace() {
     });
 
     submitBtn.textContent = "submitted";
+    hasUnsavedChanges = false;
 
     setTimeout(() => {
       submitBtn.textContent = "submit trace";
@@ -134,6 +142,8 @@ async function submitTrace() {
       submitBtn.textContent = "submit trace";
       submitBtn.disabled = false;
     }, 1500);
+  } finally {
+    isSubmitting = false;
   }
 }
 
@@ -150,3 +160,19 @@ canvas.addEventListener("touchcancel", stopDrawing, { passive: false });
 submitBtn.addEventListener("click", submitTrace);
 
 window.addEventListener("resize", resizeCanvas);
+
+if (navGalleryBtn) {
+  navGalleryBtn.addEventListener("click", (e) => {
+    if (!hasUnsavedChanges) return;
+
+    e.preventDefault();
+    const message = isSubmitting
+      ? "Submission is in progress. Are you sure you want to leave for the Gallery?"
+      : "You have an unsaved drawing. Are you sure you want to leave for the Gallery?";
+
+    const ok = window.confirm(
+      message
+    );
+    if (ok) window.location.href = navGalleryBtn.href;
+  });
+}
