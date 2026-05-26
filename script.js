@@ -164,6 +164,16 @@ submitBtn.addEventListener("click", submitTrace);
 
 window.addEventListener("resize", resizeCanvas);
 
+const drawSectionObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      navGalleryBtn?.classList.toggle("visible", entry.isIntersecting);
+    });
+  },
+  { threshold: 0.1 },
+);
+drawSectionObserver.observe(drawSection);
+
 if (navGalleryBtn) {
   navGalleryBtn.addEventListener("click", (e) => {
     if (!hasUnsavedChanges) return;
