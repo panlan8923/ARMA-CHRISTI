@@ -21,6 +21,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const canvas = document.getElementById("draw");
+const drawSection = document.getElementById("drawSection");
 const ctx = canvas.getContext("2d");
 const submitBtn = document.getElementById("submitBtn");
 
@@ -29,25 +30,27 @@ let lastX = 0;
 let lastY = 0;
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const width = drawSection.clientWidth;
+  const height = drawSection.clientHeight;
+
+  canvas.width = width;
+  canvas.height = height;
   ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, width, height);
 }
 
 resizeCanvas();
 
 function getPosition(e) {
-  if (e.touches && e.touches.length > 0) {
-    return {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY,
-    };
-  }
+  const rect = canvas.getBoundingClientRect();
+  const clientX =
+    e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+  const clientY =
+    e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
 
   return {
-    x: e.clientX,
-    y: e.clientY,
+    x: clientX - rect.left,
+    y: clientY - rect.top,
   };
 }
 
