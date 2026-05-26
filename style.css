@@ -104,3 +104,36 @@ canvas {
 
   cursor: pointer !important;
 }
+
+.navBtn {
+  position: fixed;
+  top: 20px;
+  z-index: 100000;
+
+  background: white;
+  color: black;
+  text-decoration: none;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+#navHome {
+  left: 20px;
+}
+
+#navGallery {
+  right: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#navGallery.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
