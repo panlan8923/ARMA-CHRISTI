@@ -8,9 +8,27 @@
   </head>
 
   <body>
-    <canvas id="draw"></canvas>
+    <header class="hero">
+      <img
+        src="lettering.svg"
+        alt="ARMA CHRISTI"
+        class="hero__logo"
+        width="574"
+        height="468"
+      />
+      <p class="hero__tagline">
+        Scopri le realtà indipendenti di Perugia
+      </p>
+      <div class="hero__scroll-hint" aria-hidden="true">
+        <span class="hero__scroll-label">inizia</span>
+        <span class="hero__scroll-arrow">↓</span>
+      </div>
+    </header>
 
-    <button id="submitBtn">submit trace</button>
+    <section id="drawSection" class="draw-section">
+      <canvas id="draw"></canvas>
+      <button id="submitBtn">submit trace</button>
+    </section>
 
     <a id="navGallery" class="navBtn" href="gallery.html">Gallery</a>
 
