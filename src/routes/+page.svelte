@@ -1,0 +1,316 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+	import { db } from '$lib/firebase';
+
+	let canvas: HTMLCanvasElement;
+	let drawSection: HTMLElement;
+	let navGalleryBtn: HTMLAnchorElement;
+
+	let drawing = false;
+	let lastX = 0;
+	let lastY = 0;
+	let hasUnsavedChanges = false;
+	let isSubmitting = false;
+
+	let showGallery = $state(false);
+	let submitLabel = $state('submit trace');
+	let submitDisabled = $state(false);
+
+	function resizeCanvas() {
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+		canvas.width = drawSection.clientWidth;
+		canvas.height = drawSection.clientHeight;
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		hasUnsavedChanges = false;
+	}
+
+	function getPosition(e: MouseEvent | TouchEvent) {
+		const rect = canvas.getBoundingClientRect();
+		const touch = e instanceof TouchEvent ? e.touches[0] : undefined;
+		const clientX = touch ? touch.clientX : (e as MouseEvent).clientX;
+		const clientY = touch ? touch.clientY : (e as MouseEvent).clientY;
+		return { x: clientX - rect.left, y: clientY - rect.top };
+	}
+
+	function startDrawing(e: MouseEvent | TouchEvent) {
+		e.preventDefault();
+		const pos = getPosition(e);
+		drawing = true;
+		lastX = pos.x;
+		lastY = pos.y;
+		hasUnsavedChanges = true;
+	}
+
+	function stopDrawing(e?: MouseEvent | TouchEvent) {
+		e?.preventDefault();
+		drawing = false;
+	}
+
+	function draw(e: MouseEvent | TouchEvent) {
+		if (!drawing) return;
+
+		e.preventDefault();
+		const pos = getPosition(e);
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		const jitter = 10;
+		const offsetX = (Math.random() - 0.5) * jitter;
+		const offsetY = (Math.random() - 0.5) * jitter;
+
+		ctx.strokeStyle = 'white';
+		ctx.lineWidth = 12 + Math.random() * 14;
+		ctx.lineCap = 'round';
+		ctx.lineJoin = 'round';
+		ctx.beginPath();
+		ctx.moveTo(lastX, lastY);
+		ctx.lineTo(pos.x + offsetX, pos.y + offsetY);
+		ctx.stroke();
+
+		for (let i = 0; i < 8; i += 1) {
+			ctx.beginPath();
+			ctx.arc(pos.x + (Math.random() - 0.5) * 24, pos.y + (Math.random() - 0.5) * 24, Math.random() * 2, 0, Math.PI * 2);
+			ctx.fillStyle = 'rgba(255,255,255,0.08)';
+			ctx.fill();
+		}
+
+		lastX = pos.x;
+		lastY = pos.y;
+	}
+
+	function startDrawingTouch(e: TouchEvent) {
+		e.preventDefault();
+		startDrawing(e);
+	}
+
+	function drawTouch(e: TouchEvent) {
+		e.preventDefault();
+		draw(e);
+	}
+
+	function stopDrawingTouch(e: TouchEvent) {
+		e.preventDefault();
+		stopDrawing(e);
+	}
+
+	async function submitTrace() {
+		if (isSubmitting) return;
+
+		isSubmitting = true;
+		submitDisabled = true;
+		submitLabel = 'submitting...';
+
+		try {
+			const imageData = canvas.toDataURL('image/jpeg', 0.7);
+			await addDoc(collection(db, 'artworks'), {
+				imageData,
+				createdAt: serverTimestamp(),
+				width: canvas.width,
+				height: canvas.height,
+				userAgent: navigator.userAgent
+			});
+			submitLabel = 'submitted';
+			hasUnsavedChanges = false;
+		} catch (error) {
+			console.error('Submit failed:', error);
+			submitLabel = 'failed';
+		} finally {
+			window.setTimeout(() => {
+				submitLabel = 'submit trace';
+				submitDisabled = false;
+				isSubmitting = false;
+			}, 1500);
+		}
+	}
+
+	function onGalleryClick(e: MouseEvent) {
+		if (!hasUnsavedChanges) return;
+		e.preventDefault();
+		const message = isSubmitting
+			? 'Submission is in progress. Are you sure you want to leave for the Gallery?'
+			: 'You have an unsaved drawing. Are you sure you want to leave for the Gallery?';
+		if (window.confirm(message)) {
+			window.location.href = navGalleryBtn.href;
+		}
+	}
+
+	onMount(() => {
+		resizeCanvas();
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					showGallery = entry.isIntersecting;
+				}
+			},
+			{ threshold: 0.1 }
+		);
+
+		observer.observe(drawSection);
+		window.addEventListener('resize', resizeCanvas);
+		navGalleryBtn.addEventListener('click', onGalleryClick);
+
+		return () => {
+			observer.disconnect();
+			window.removeEventListener('resize', resizeCanvas);
+			navGalleryBtn.removeEventListener('click', onGalleryClick);
+		};
+	});
+</script>
+
+<svelte:head>
+	<title>ARMA CHRISTI</title>
+</svelte:head>
+
+<header class="hero">
+	<img src="/lettering.svg" alt="ARMA CHRISTI" class="hero__logo" width="574" height="468" />
+	<p class="hero__tagline">Scopri le realtà indipendenti di Perugia</p>
+	<div class="hero__scroll-hint" aria-hidden="true">
+		<span class="hero__scroll-label">inizia</span>
+		<span class="hero__scroll-arrow">↓</span>
+	</div>
+</header>
+
+<section id="drawSection" class="draw-section" bind:this={drawSection}>
+	<canvas
+		id="draw"
+		bind:this={canvas}
+		onmousedown={startDrawing}
+		onmousemove={draw}
+		onmouseup={stopDrawing}
+		onmouseleave={stopDrawing}
+		ontouchstart={startDrawingTouch}
+		ontouchmove={drawTouch}
+		ontouchend={stopDrawingTouch}
+		ontouchcancel={stopDrawingTouch}
+	></canvas>
+	<button id="submitBtn" onclick={submitTrace} disabled={submitDisabled}>{submitLabel}</button>
+</section>
+
+<a id="navGallery" class={`navBtn ${showGallery ? 'visible' : ''}`} href="/gallery" bind:this={navGalleryBtn}>
+	Gallery
+</a>
+
+<style>
+	:global(html),
+	:global(body) {
+		margin: 0;
+		padding: 0;
+		background: black;
+		color: #cccccc;
+		overflow-x: hidden;
+		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+	}
+
+	.hero {
+		box-sizing: border-box;
+		min-height: 100vh;
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 48px 24px 40px;
+		text-align: center;
+	}
+
+	.hero__logo {
+		display: block;
+		width: min(680px, 90vw);
+		height: auto;
+		max-height: 58vh;
+		object-fit: contain;
+	}
+
+	.hero__tagline {
+		margin: 28px 0 0;
+		max-width: 28em;
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 2px;
+		line-height: 1.5;
+		text-transform: uppercase;
+		color: #999999;
+	}
+
+	.hero__scroll-hint {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		margin-top: 56px;
+	}
+
+	.hero__scroll-label {
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: lowercase;
+		color: #666666;
+	}
+
+	.hero__scroll-arrow {
+		font-size: 1.25rem;
+		line-height: 1;
+		color: #666666;
+	}
+
+	.draw-section {
+		position: relative;
+		width: 100%;
+		height: 100vh;
+		height: 100dvh;
+	}
+
+	canvas {
+		display: block;
+		width: 100%;
+		height: 100%;
+		touch-action: none;
+	}
+
+	#submitBtn {
+		position: absolute;
+		left: 50%;
+		bottom: 48px;
+		transform: translateX(-50%);
+		z-index: 999999;
+		background: white;
+		color: black;
+		border: none;
+		border-radius: 999px;
+		padding: 16px 34px;
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+
+	.navBtn {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		z-index: 100000;
+		background: white;
+		color: black;
+		text-decoration: none;
+		padding: 10px 16px;
+		border-radius: 999px;
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.3s ease;
+	}
+
+	.navBtn.visible {
+		opacity: 1;
+		pointer-events: auto;
+	}
+</style>
