@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 
@@ -166,7 +167,7 @@
 </svelte:head>
 
 <header class="hero">
-	<img src="/lettering.svg" alt="ARMA CHRISTI" class="hero__logo" width="574" height="468" />
+	<img src={`${base}/lettering.svg`} alt="ARMA CHRISTI" class="hero__logo" width="574" height="468" />
 	<p class="hero__tagline">Scopri le realtà indipendenti di Perugia</p>
 	<div class="hero__scroll-hint" aria-hidden="true">
 		<span class="hero__scroll-label">inizia</span>
@@ -190,7 +191,7 @@
 	<button id="submitBtn" onclick={submitTrace} disabled={submitDisabled}>{submitLabel}</button>
 </section>
 
-<a id="navGallery" class={`navBtn ${showGallery ? 'visible' : ''}`} href="/gallery" bind:this={navGalleryBtn}>
+<a id="navGallery" class={`navBtn ${showGallery ? 'visible' : ''}`} href={`${base}/gallery`} bind:this={navGalleryBtn}>
 	Gallery
 </a>
 

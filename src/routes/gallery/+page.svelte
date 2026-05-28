@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 	import { mapArtworkDoc, type ArtworkItem } from '$lib/gallery';
@@ -43,7 +44,7 @@
 	{/if}
 </div>
 
-<a id="navHome" class="navBtn" href="/">Home</a>
+<a id="navHome" class="navBtn" href={`${base}/`}>Home</a>
 
 <style>
 	:global(html),
