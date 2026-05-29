@@ -4,8 +4,11 @@
 	import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 
+	const CANVAS_FILL = '#2a2a2a';
+
 	let canvas: HTMLCanvasElement;
 	let drawSection: HTMLElement;
+	let drawArea: HTMLElement;
 	let navGalleryBtn: HTMLAnchorElement;
 
 	let drawing = false;
@@ -15,15 +18,16 @@
 	let isSubmitting = false;
 
 	let showGallery = $state(false);
+	let hasStartedDrawing = $state(false);
 	let submitLabel = $state('submit trace');
 	let submitDisabled = $state(false);
 
 	function resizeCanvas() {
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
-		canvas.width = drawSection.clientWidth;
-		canvas.height = drawSection.clientHeight;
-		ctx.fillStyle = 'black';
+		canvas.width = drawArea.clientWidth;
+		canvas.height = drawArea.clientHeight;
+		ctx.fillStyle = CANVAS_FILL;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		hasUnsavedChanges = false;
 	}
@@ -40,6 +44,7 @@
 		e.preventDefault();
 		const pos = getPosition(e);
 		drawing = true;
+		hasStartedDrawing = true;
 		lastX = pos.x;
 		lastY = pos.y;
 		hasUnsavedChanges = true;
@@ -176,19 +181,28 @@
 </header>
 
 <section id="drawSection" class="draw-section" bind:this={drawSection}>
-	<canvas
-		id="draw"
-		bind:this={canvas}
-		onmousedown={startDrawing}
-		onmousemove={draw}
-		onmouseup={stopDrawing}
-		onmouseleave={stopDrawing}
-		ontouchstart={startDrawingTouch}
-		ontouchmove={drawTouch}
-		ontouchend={stopDrawingTouch}
-		ontouchcancel={stopDrawingTouch}
-	></canvas>
-	<button id="submitBtn" onclick={submitTrace} disabled={submitDisabled}>{submitLabel}</button>
+	<div class="draw-area" bind:this={drawArea}>
+		<canvas
+			id="draw"
+			bind:this={canvas}
+			onmousedown={startDrawing}
+			onmousemove={draw}
+			onmouseup={stopDrawing}
+			onmouseleave={stopDrawing}
+			ontouchstart={startDrawingTouch}
+			ontouchmove={drawTouch}
+			ontouchend={stopDrawingTouch}
+			ontouchcancel={stopDrawingTouch}
+		></canvas>
+		<p
+			class="draw-placeholder"
+			class:draw-placeholder--hidden={hasStartedDrawing}
+			aria-hidden={hasStartedDrawing}
+		>
+			Lascia il tuo segno
+		</p>
+		<button id="submitBtn" onclick={submitTrace} disabled={submitDisabled}>{submitLabel}</button>
+	</div>
 </section>
 
 <a id="navGallery" class={`navBtn ${showGallery ? 'visible' : ''}`} href={`${base}/gallery`} bind:this={navGalleryBtn}>
@@ -260,10 +274,20 @@
 	}
 
 	.draw-section {
-		position: relative;
+		box-sizing: border-box;
 		width: 100%;
 		height: 100vh;
 		height: 100dvh;
+		padding: 32px;
+		display: flex;
+	}
+
+	.draw-area {
+		position: relative;
+		flex: 1;
+		min-height: 0;
+		border-radius: 16px;
+		overflow: hidden;
 	}
 
 	canvas {
@@ -273,12 +297,35 @@
 		touch-action: none;
 	}
 
+	.draw-placeholder {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		padding: 0 24px;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 2px;
+		line-height: 1.5;
+		text-transform: uppercase;
+		color: #aaaaaa;
+		pointer-events: none;
+		opacity: 1;
+		transition: opacity 0.4s ease;
+	}
+
+	.draw-placeholder--hidden {
+		opacity: 0;
+	}
+
 	#submitBtn {
 		position: absolute;
 		left: 50%;
-		bottom: 48px;
+		bottom: 32px;
 		transform: translateX(-50%);
-		z-index: 999999;
+		z-index: 1;
 		background: white;
 		color: black;
 		border: none;
