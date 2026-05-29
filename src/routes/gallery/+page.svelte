@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
 	import { signOutAdmin, subscribeToAuthState } from '$lib/auth';
 	import { db } from '$lib/firebase';
@@ -19,9 +19,7 @@
 	let pendingAction = $state<{ id: string; nextVisibility: ArtworkVisibility } | null>(null);
 	let actionError = $state('');
 
-	const displayedArtworks = $derived(
-		filterArtworksForDisplay(artworks, { isAdmin, showHidden })
-	);
+	const displayedArtworks = $derived(filterArtworksForDisplay(artworks, { isAdmin, showHidden }));
 
 	onMount(() => {
 		const unsubscribeAuth = subscribeToAuthState((user) => {
@@ -170,7 +168,7 @@
 	</div>
 {/if}
 
-<a id="navHome" class="navBtn" href={`${base}/`}>Home</a>
+<a id="navHome" class="navBtn" href={resolve('/')}>Home</a>
 
 <style>
 	:global(html),
@@ -193,7 +191,11 @@
 		background: rgba(17, 17, 17, 0.95);
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		border-radius: 999px;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 		font-size: 13px;
 		color: #ddd;
 	}
@@ -339,7 +341,11 @@
 		grid-column: 1 / -1;
 		color: #cccccc;
 		margin: 20px;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.confirm-backdrop {
@@ -361,7 +367,11 @@
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		border-radius: 20px;
 		color: white;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.confirm-dialog h2 {

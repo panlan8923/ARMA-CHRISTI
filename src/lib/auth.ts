@@ -1,9 +1,4 @@
-import {
-	onAuthStateChanged,
-	signInWithEmailAndPassword,
-	signOut,
-	type User
-} from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
 import { auth } from '$lib/firebase';
 
 const adminEmail = import.meta.env.PUBLIC_ADMIN_EMAIL;

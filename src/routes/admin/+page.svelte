@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { signInAdmin } from '$lib/auth';
 
 	let password = $state('');
@@ -14,7 +14,7 @@
 
 		try {
 			await signInAdmin(password);
-			await goto(`${base}/gallery`);
+			await goto(resolve('/gallery'));
 		} catch {
 			error = 'Password non corretta';
 		} finally {
@@ -45,7 +45,7 @@
 		<button type="submit" disabled={loading}>{loading ? 'Accesso...' : 'Entra'}</button>
 	</form>
 
-	<a class="home-link" href={`${base}/`}>Torna alla home</a>
+	<a class="home-link" href={resolve('/')}>Torna alla home</a>
 </main>
 
 <style>
@@ -64,7 +64,11 @@
 		align-items: center;
 		justify-content: center;
 		gap: 24px;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.login-card {

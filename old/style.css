@@ -1,139 +1,151 @@
 html,
 body {
-  margin: 0;
-  padding: 0;
-  background: black;
-  color: #cccccc;
-  overflow-x: hidden;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+	margin: 0;
+	padding: 0;
+	background: black;
+	color: #cccccc;
+	overflow-x: hidden;
+	font-family:
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		sans-serif;
 }
 
 .hero {
-  box-sizing: border-box;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 24px 40px;
-  text-align: center;
+	box-sizing: border-box;
+	min-height: 100vh;
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 48px 24px 40px;
+	text-align: center;
 }
 
 .hero__logo {
-  display: block;
-  width: min(680px, 90vw);
-  height: auto;
-  max-height: 58vh;
-  object-fit: contain;
+	display: block;
+	width: min(680px, 90vw);
+	height: auto;
+	max-height: 58vh;
+	object-fit: contain;
 }
 
 .hero__tagline {
-  margin: 28px 0 0;
-  max-width: 28em;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  line-height: 1.5;
-  text-transform: uppercase;
-  color: #999999;
+	margin: 28px 0 0;
+	max-width: 28em;
+	font-family:
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 2px;
+	line-height: 1.5;
+	text-transform: uppercase;
+	color: #999999;
 }
 
 .hero__scroll-hint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-top: 56px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	margin-top: 56px;
 }
 
 .hero__scroll-label {
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: lowercase;
-  color: #666666;
+	font-family:
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		sans-serif;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.2em;
+	text-transform: lowercase;
+	color: #666666;
 }
 
 .hero__scroll-arrow {
-  font-size: 1.25rem;
-  line-height: 1;
-  color: #666666;
+	font-size: 1.25rem;
+	line-height: 1;
+	color: #666666;
 }
 
 .draw-section {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	height: 100dvh;
 }
 
 canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
+	display: block;
+	width: 100%;
+	height: 100%;
+	touch-action: none;
 }
 
 #submitBtn {
-  position: absolute !important;
-  left: 50% !important;
-  bottom: 48px !important;
-  transform: translateX(-50%) !important;
+	position: absolute !important;
+	left: 50% !important;
+	bottom: 48px !important;
+	transform: translateX(-50%) !important;
 
-  z-index: 999999 !important;
+	z-index: 999999 !important;
 
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
 
-  background: white !important;
-  color: black !important;
+	background: white !important;
+	color: black !important;
 
-  border: none !important;
-  border-radius: 999px !important;
+	border: none !important;
+	border-radius: 999px !important;
 
-  padding: 16px 34px !important;
+	padding: 16px 34px !important;
 
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  letter-spacing: 2px !important;
-  text-transform: uppercase !important;
+	font-size: 14px !important;
+	font-weight: 700 !important;
+	letter-spacing: 2px !important;
+	text-transform: uppercase !important;
 
-  cursor: pointer !important;
+	cursor: pointer !important;
 }
 
 .navBtn {
-  position: fixed;
-  top: 20px;
-  z-index: 100000;
+	position: fixed;
+	top: 20px;
+	z-index: 100000;
 
-  background: white;
-  color: black;
-  text-decoration: none;
+	background: white;
+	color: black;
+	text-decoration: none;
 
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+	padding: 10px 16px;
+	border-radius: 999px;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
 }
 
 #navHome {
-  left: 20px;
+	left: 20px;
 }
 
 #navGallery {
-  right: 20px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
+	right: 20px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
 }
 
 #navGallery.visible {
-  opacity: 1;
-  pointer-events: auto;
+	opacity: 1;
+	pointer-events: auto;
 }

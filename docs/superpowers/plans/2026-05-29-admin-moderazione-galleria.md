@@ -28,6 +28,7 @@
 ### Task 1: Extend artwork model and visibility filtering
 
 **Files:**
+
 - Modify: `src/lib/gallery.ts`
 - Modify: `src/lib/gallery.spec.ts`
 - Test: `src/lib/gallery.spec.ts`
@@ -96,9 +97,11 @@ describe('filterArtworksForDisplay', () => {
 - [ ] **Step 2: Run tests and confirm failure**
 
 Run:
+
 ```bash
 npm run test:unit -- src/lib/gallery.spec.ts --run
 ```
+
 Expected: FAIL — `filterArtworksForDisplay` not exported; `mapArtworkDoc` signature mismatch.
 
 - [ ] **Step 3: Implement gallery model changes**
@@ -114,10 +117,7 @@ export type ArtworkItem = {
 	visibility: ArtworkVisibility;
 };
 
-export function mapArtworkDoc(
-	id: string,
-	data: Record<string, unknown>
-): ArtworkItem | null {
+export function mapArtworkDoc(id: string, data: Record<string, unknown>): ArtworkItem | null {
 	if (typeof data.imageData !== 'string' || data.imageData.length === 0) {
 		return null;
 	}
@@ -146,9 +146,11 @@ export function filterArtworksForDisplay(
 - [ ] **Step 4: Run tests and confirm pass**
 
 Run:
+
 ```bash
 npm run test:unit -- src/lib/gallery.spec.ts --run
 ```
+
 Expected: PASS (3 tests in `filterArtworksForDisplay`, 3 in `mapArtworkDoc`).
 
 - [ ] **Step 5: Commit**
@@ -163,6 +165,7 @@ git commit -m "feat: add artwork visibility model and filtering"
 ### Task 2: Firebase Auth module
 
 **Files:**
+
 - Modify: `src/lib/firebase.ts`
 - Create: `src/lib/auth.ts`
 - Create: `.env.example`
@@ -198,12 +201,7 @@ export const auth = getAuth(app);
 Create `src/lib/auth.ts`:
 
 ```ts
-import {
-	onAuthStateChanged,
-	signInWithEmailAndPassword,
-	signOut,
-	type User
-} from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
 import { auth } from '$lib/firebase';
 
 const adminEmail = import.meta.env.PUBLIC_ADMIN_EMAIL;
@@ -241,9 +239,11 @@ PUBLIC_ADMIN_EMAIL=admin@arma-christi.it
 - [ ] **Step 4: Verify type checks**
 
 Run:
+
 ```bash
 npm run check
 ```
+
 Expected: PASS (gallery page still compiles; `mapArtworkDoc` call sites will fail until Task 4 — if check fails on gallery, note it and proceed; Task 4 fixes call sites).
 
 - [ ] **Step 5: Commit**
@@ -258,6 +258,7 @@ git commit -m "feat: add firebase auth helpers for admin login"
 ### Task 3: Admin login page
 
 **Files:**
+
 - Create: `src/routes/admin/+page.svelte`
 - Create: `src/routes/admin/admin.e2e.ts`
 - Test: `src/routes/admin/admin.e2e.ts`
@@ -280,9 +281,11 @@ test('admin page shows password login', async ({ page }) => {
 - [ ] **Step 2: Run e2e and confirm failure**
 
 Run:
+
 ```bash
 npm run test:e2e -- src/routes/admin/admin.e2e.ts
 ```
+
 Expected: FAIL — route `/admin` not found (404).
 
 - [ ] **Step 3: Implement admin login page**
@@ -356,7 +359,11 @@ Create `src/routes/admin/+page.svelte`:
 		align-items: center;
 		justify-content: center;
 		gap: 24px;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.login-card {
@@ -427,9 +434,11 @@ Create `src/routes/admin/+page.svelte`:
 - [ ] **Step 4: Run e2e and confirm pass**
 
 Run:
+
 ```bash
 npm run test:e2e -- src/routes/admin/admin.e2e.ts
 ```
+
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -444,6 +453,7 @@ git commit -m "feat: add admin login page"
 ### Task 4: Gallery public filtering and admin moderation UI
 
 **Files:**
+
 - Modify: `src/routes/gallery/+page.svelte`
 - Test: `npm run check`, `npm run test:unit -- --run`
 
@@ -473,9 +483,7 @@ Replace `src/routes/gallery/+page.svelte` with:
 	let pendingAction = $state<{ id: string; nextVisibility: ArtworkVisibility } | null>(null);
 	let actionError = $state('');
 
-	const displayedArtworks = $derived(
-		filterArtworksForDisplay(artworks, { isAdmin, showHidden })
-	);
+	const displayedArtworks = $derived(filterArtworksForDisplay(artworks, { isAdmin, showHidden }));
 
 	onMount(() => {
 		const unsubscribeAuth = subscribeToAuthState((user) => {
@@ -647,7 +655,11 @@ Replace `src/routes/gallery/+page.svelte` with:
 		background: rgba(17, 17, 17, 0.95);
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		border-radius: 999px;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 		font-size: 13px;
 		color: #ddd;
 	}
@@ -793,7 +805,11 @@ Replace `src/routes/gallery/+page.svelte` with:
 		grid-column: 1 / -1;
 		color: #cccccc;
 		margin: 20px;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.confirm-backdrop {
@@ -815,7 +831,11 @@ Replace `src/routes/gallery/+page.svelte` with:
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		border-radius: 20px;
 		color: white;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.confirm-dialog h2 {
@@ -879,10 +899,12 @@ Replace `src/routes/gallery/+page.svelte` with:
 - [ ] **Step 2: Run unit tests and type checks**
 
 Run:
+
 ```bash
 npm run test:unit -- --run
 npm run check
 ```
+
 Expected: PASS.
 
 - [ ] **Step 3: Commit**
@@ -897,6 +919,7 @@ git commit -m "feat: add gallery admin moderation controls"
 ### Task 5: Firestore security rules and Firebase Console setup
 
 **Files:**
+
 - Create: `firestore.rules`
 - Modify: `README.md`
 
@@ -953,27 +976,32 @@ git commit -m "docs: add firestore rules and admin setup notes"
 ### Task 6: Final verification
 
 **Files:**
+
 - Test: full suite
 
 - [ ] **Step 1: Run full test suite**
 
 Run:
+
 ```bash
 npm run test:unit -- --run
 npm run test:e2e
 npm run check
 npm run lint
 ```
+
 Expected: PASS.
 
 - [ ] **Step 2: Manual smoke test (local with `.env` configured)**
 
 Run:
+
 ```bash
 npm run dev
 ```
 
 Checklist:
+
 - Visit `/gallery` logged out → no admin bar, no action buttons.
 - Visit `/admin` → wrong password shows "Password non corretta".
 - Correct password → redirects to gallery with admin bar.
@@ -994,18 +1022,18 @@ git commit -m "fix: address admin moderation verification issues"
 
 ## Spec coverage checklist
 
-| Spec requirement | Task |
-|------------------|------|
-| Soft hide with restore | Task 1, 4 |
-| `/admin` login page | Task 3 |
-| Redirect to gallery after login | Task 3 |
-| Shared password UX (no username) | Task 2, 3 |
-| Protected auth (not in public code) | Task 2, 5 |
-| Admin bar with toggle and exit | Task 4 |
-| Hide/restore with confirm dialogs | Task 4 |
-| Hidden styling (faded, label) | Task 4 |
-| Visitors see only visible artworks | Task 1, 4 |
-| Legacy artworks without field = visible | Task 1 |
-| Error on failed hide/restore | Task 4 |
-| Empty gallery message | Task 4 |
-| Style consistent with existing pages | Task 3, 4 |
+| Spec requirement                        | Task      |
+| --------------------------------------- | --------- |
+| Soft hide with restore                  | Task 1, 4 |
+| `/admin` login page                     | Task 3    |
+| Redirect to gallery after login         | Task 3    |
+| Shared password UX (no username)        | Task 2, 3 |
+| Protected auth (not in public code)     | Task 2, 5 |
+| Admin bar with toggle and exit          | Task 4    |
+| Hide/restore with confirm dialogs       | Task 4    |
+| Hidden styling (faded, label)           | Task 4    |
+| Visitors see only visible artworks      | Task 1, 4 |
+| Legacy artworks without field = visible | Task 1    |
+| Error on failed hide/restore            | Task 4    |
+| Empty gallery message                   | Task 4    |
+| Style consistent with existing pages    | Task 3, 4 |

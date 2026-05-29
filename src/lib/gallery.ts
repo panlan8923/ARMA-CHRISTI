@@ -6,10 +6,7 @@ export type ArtworkItem = {
 	visibility: ArtworkVisibility;
 };
 
-export function mapArtworkDoc(
-	id: string,
-	data: Record<string, unknown>
-): ArtworkItem | null {
+export function mapArtworkDoc(id: string, data: Record<string, unknown>): ArtworkItem | null {
 	if (typeof data.imageData !== 'string' || data.imageData.length === 0) {
 		return null;
 	}

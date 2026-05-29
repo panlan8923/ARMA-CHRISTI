@@ -15,9 +15,9 @@ Permettere a un piccolo team di admin di accedere a una pagina riservata, entrar
 
 ## Due mondi distinti
 
-| Chi | Cosa vede |
-|-----|-----------|
-| Visitatore | Home + galleria pubblica. Solo disegni non nascosti. Nessun login. |
+| Chi           | Cosa vede                                                                |
+| ------------- | ------------------------------------------------------------------------ |
+| Visitatore    | Home + galleria pubblica. Solo disegni non nascosti. Nessun login.       |
 | Admin loggato | Stessa galleria, con barra strumenti admin e azioni nascondi/ripristina. |
 
 ## Flusso admin
@@ -83,14 +83,14 @@ Permettere a un piccolo team di admin di accedere a una pagina riservata, entrar
 
 ## Comportamento e gestione errori
 
-| Situazione | Comportamento |
-|------------|---------------|
-| Admin nasconde un disegno | Sparisce subito per i visitatori; per l'admin resta visibile solo con "Mostra anche i nascosti" |
-| Visitatore ricarica la galleria | Non vede mai i disegni nascosti |
-| Admin esce ("Esci") | Galleria torna normale, senza controlli |
-| Password dimenticata | Reset manuale fuori dal sito (procedura da definire con chi gestisce l'archivio) |
-| Galleria vuota | Messaggio vuoto come oggi |
-| Errore di connessione | Messaggio chiaro; l'azione non viene applicata |
+| Situazione                      | Comportamento                                                                                   |
+| ------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Admin nasconde un disegno       | Sparisce subito per i visitatori; per l'admin resta visibile solo con "Mostra anche i nascosti" |
+| Visitatore ricarica la galleria | Non vede mai i disegni nascosti                                                                 |
+| Admin esce ("Esci")             | Galleria torna normale, senza controlli                                                         |
+| Password dimenticata            | Reset manuale fuori dal sito (procedura da definire con chi gestisce l'archivio)                |
+| Galleria vuota                  | Messaggio vuoto come oggi                                                                       |
+| Errore di connessione           | Messaggio chiaro; l'azione non viene applicata                                                  |
 
 ## Modello dati
 
