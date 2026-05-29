@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { signInAdmin } from '$lib/auth';
+	import { getAdminEmailHint, getAdminLoginErrorMessage, signInAdmin } from '$lib/auth';
+
+	const adminEmailHint = getAdminEmailHint();
 
 	let password = $state('');
 	let error = $state('');
@@ -15,8 +17,9 @@
 		try {
 			await signInAdmin(password);
 			await goto(resolve('/gallery'));
-		} catch {
-			error = 'Password non corretta';
+		} catch (err) {
+			console.error('Admin login failed:', err);
+			error = getAdminLoginErrorMessage(err);
 		} finally {
 			loading = false;
 		}
@@ -30,6 +33,11 @@
 <main class="admin-page">
 	<form class="login-card" onsubmit={handleSubmit}>
 		<h1>Area admin</h1>
+		{#if adminEmailHint}
+			<p class="email-hint">Account: {adminEmailHint}</p>
+		{:else}
+			<p class="email-hint email-hint--missing">Account admin non configurato (.env)</p>
+		{/if}
 		<label for="password">Password</label>
 		<input
 			id="password"
@@ -88,6 +96,16 @@
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 1px;
+	}
+
+	.email-hint {
+		margin: 0;
+		font-size: 13px;
+		color: #aaaaaa;
+	}
+
+	.email-hint--missing {
+		color: #ff8a8a;
 	}
 
 	label {
