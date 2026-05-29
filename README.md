@@ -45,3 +45,10 @@ You can preview the production build with `npm run preview`.
 
 - Home: `/`
 - Gallery: `/gallery`
+
+## Admin moderation
+
+1. Copy `.env.example` to `.env` and set `PUBLIC_ADMIN_EMAIL` to the shared admin account email.
+2. In Firebase Console > Authentication, enable Email/Password and create one user with that email and the shared team password.
+3. In Firebase Console > Firestore > Rules, paste `firestore.rules` (update the admin email if needed) and publish.
+4. Open `/admin`, enter the shared password, and use gallery moderation controls.

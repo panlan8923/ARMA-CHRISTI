@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { base } from '$app/paths';
+	import { base, resolve } from '$app/paths';
 	import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 
@@ -78,7 +78,13 @@
 
 		for (let i = 0; i < 8; i += 1) {
 			ctx.beginPath();
-			ctx.arc(pos.x + (Math.random() - 0.5) * 24, pos.y + (Math.random() - 0.5) * 24, Math.random() * 2, 0, Math.PI * 2);
+			ctx.arc(
+				pos.x + (Math.random() - 0.5) * 24,
+				pos.y + (Math.random() - 0.5) * 24,
+				Math.random() * 2,
+				0,
+				Math.PI * 2
+			);
 			ctx.fillStyle = 'rgba(255,255,255,0.08)';
 			ctx.fill();
 		}
@@ -172,7 +178,13 @@
 </svelte:head>
 
 <header class="hero">
-	<img src={`${base}/lettering.svg`} alt="ARMA CHRISTI" class="hero__logo" width="574" height="468" />
+	<img
+		src={`${base}/lettering.svg`}
+		alt="ARMA CHRISTI"
+		class="hero__logo"
+		width="574"
+		height="468"
+	/>
 	<p class="hero__tagline">Scopri le realtà indipendenti di Perugia</p>
 	<div class="hero__scroll-hint" aria-hidden="true">
 		<span class="hero__scroll-label">inizia</span>
@@ -205,7 +217,12 @@
 	</div>
 </section>
 
-<a id="navGallery" class={`navBtn ${showGallery ? 'visible' : ''}`} href={`${base}/gallery`} bind:this={navGalleryBtn}>
+<a
+	id="navGallery"
+	class={`navBtn ${showGallery ? 'visible' : ''}`}
+	href={resolve('/gallery')}
+	bind:this={navGalleryBtn}
+>
 	Gallery
 </a>
 
@@ -217,7 +234,11 @@
 		background: black;
 		color: #cccccc;
 		overflow-x: hidden;
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
 	}
 
 	.hero {

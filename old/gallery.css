@@ -1,54 +1,54 @@
 html,
 body {
-  margin: 0;
-  padding: 0;
-  background: black;
-  overflow-x: hidden;
+	margin: 0;
+	padding: 0;
+	background: black;
+	overflow-x: hidden;
 }
 
 #gallery {
-  display: grid;
+	display: grid;
 
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 
-  gap: 20px;
+	gap: 20px;
 
-  padding: 20px;
+	padding: 20px;
 }
 
 .artwork {
-  width: 100%;
+	width: 100%;
 
-  background: #111;
+	background: #111;
 
-  border-radius: 20px;
+	border-radius: 20px;
 
-  overflow: hidden;
+	overflow: hidden;
 }
 
 .artwork img {
-  width: 100%;
+	width: 100%;
 
-  display: block;
+	display: block;
 }
 
 .navBtn {
-  position: fixed;
-  top: 20px;
-  z-index: 100000;
+	position: fixed;
+	top: 20px;
+	z-index: 100000;
 
-  background: white;
-  color: black;
-  text-decoration: none;
+	background: white;
+	color: black;
+	text-decoration: none;
 
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+	padding: 10px 16px;
+	border-radius: 999px;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
 }
 
 #navHome {
-  left: 20px;
+	left: 20px;
 }

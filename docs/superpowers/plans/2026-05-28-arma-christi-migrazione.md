@@ -23,6 +23,7 @@
 ### Task 1: Create shared Firebase module
 
 **Files:**
+
 - Create: `src/lib/firebase.ts`
 - Modify: `package.json`
 - Modify: `package-lock.json`
@@ -31,9 +32,11 @@
 - [ ] **Step 1: Install Firebase package**
 
 Run:
+
 ```bash
 npm install firebase
 ```
+
 Expected: package install success and lockfile update.
 
 - [ ] **Step 2: Create Firebase module**
@@ -60,9 +63,11 @@ export const db = getFirestore(app);
 - [ ] **Step 3: Verify baseline type checks**
 
 Run:
+
 ```bash
 npm run check
 ```
+
 Expected: PASS.
 
 - [ ] **Step 4: Commit**
@@ -75,6 +80,7 @@ git commit -m "chore: add shared firebase setup"
 ### Task 2: Build Home page in Svelte with parity
 
 **Files:**
+
 - Modify: `src/routes/+page.svelte`
 - Create: `src/routes/arma-christi.e2e.ts`
 - Test: `src/routes/arma-christi.e2e.ts`
@@ -96,9 +102,11 @@ test('home shows draw UI', async ({ page }) => {
 - [ ] **Step 2: Run the test and confirm failure**
 
 Run:
+
 ```bash
 npm run test:e2e -- src/routes/arma-christi.e2e.ts
 ```
+
 Expected: FAIL because starter page is still present.
 
 - [ ] **Step 3: Replace `src/routes/+page.svelte` with Home implementation**
@@ -171,7 +179,13 @@ Expected: FAIL because starter page is still present.
 		ctx.stroke();
 		for (let i = 0; i < 8; i += 1) {
 			ctx.beginPath();
-			ctx.arc(pos.x + (Math.random() - 0.5) * 24, pos.y + (Math.random() - 0.5) * 24, Math.random() * 2, 0, Math.PI * 2);
+			ctx.arc(
+				pos.x + (Math.random() - 0.5) * 24,
+				pos.y + (Math.random() - 0.5) * 24,
+				Math.random() * 2,
+				0,
+				Math.PI * 2
+			);
 			ctx.fillStyle = 'rgba(255,255,255,0.08)';
 			ctx.fill();
 		}
@@ -239,36 +253,155 @@ Expected: FAIL because starter page is still present.
 <header class="hero">
 	<img src="/lettering.svg" alt="ARMA CHRISTI" class="hero__logo" width="574" height="468" />
 	<p class="hero__tagline">Scopri le realtà indipendenti di Perugia</p>
-	<div class="hero__scroll-hint" aria-hidden="true"><span class="hero__scroll-label">inizia</span><span class="hero__scroll-arrow">↓</span></div>
+	<div class="hero__scroll-hint" aria-hidden="true">
+		<span class="hero__scroll-label">inizia</span><span class="hero__scroll-arrow">↓</span>
+	</div>
 </header>
 <section id="drawSection" class="draw-section" bind:this={drawSection}>
-	<canvas id="draw" bind:this={canvas} onmousedown={startDrawing} onmousemove={draw} onmouseup={stopDrawing} onmouseleave={stopDrawing} ontouchstart={startDrawing} ontouchmove={draw} ontouchend={stopDrawing} ontouchcancel={stopDrawing}></canvas>
+	<canvas
+		id="draw"
+		bind:this={canvas}
+		onmousedown={startDrawing}
+		onmousemove={draw}
+		onmouseup={stopDrawing}
+		onmouseleave={stopDrawing}
+		ontouchstart={startDrawing}
+		ontouchmove={draw}
+		ontouchend={stopDrawing}
+		ontouchcancel={stopDrawing}
+	></canvas>
 	<button id="submitBtn" onclick={submitTrace} disabled={submitDisabled}>{submitLabel}</button>
 </section>
-<a id="navGallery" class={`navBtn ${showGallery ? 'visible' : ''}`} href="/gallery" bind:this={navGalleryBtn}>Gallery</a>
+<a
+	id="navGallery"
+	class={`navBtn ${showGallery ? 'visible' : ''}`}
+	href="/gallery"
+	bind:this={navGalleryBtn}>Gallery</a
+>
 
 <style>
-	:global(html), :global(body) { margin: 0; padding: 0; background: black; color: #cccccc; overflow-x: hidden; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
-	.hero { box-sizing: border-box; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 24px 40px; text-align: center; }
-	.hero__logo { display: block; width: min(680px, 90vw); height: auto; max-height: 58vh; object-fit: contain; }
-	.hero__tagline { margin: 28px 0 0; max-width: 28em; font-size: 14px; font-weight: 700; letter-spacing: 2px; line-height: 1.5; text-transform: uppercase; color: #999999; }
-	.hero__scroll-hint { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 56px; }
-	.hero__scroll-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: lowercase; color: #666666; }
-	.hero__scroll-arrow { font-size: 1.25rem; line-height: 1; color: #666666; }
-	.draw-section { position: relative; width: 100%; height: 100vh; height: 100dvh; }
-	canvas { display: block; width: 100%; height: 100%; touch-action: none; }
-	#submitBtn { position: absolute; left: 50%; bottom: 48px; transform: translateX(-50%); z-index: 999999; background: white; color: black; border: none; border-radius: 999px; padding: 16px 34px; font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
-	.navBtn { position: fixed; top: 20px; right: 20px; z-index: 100000; background: white; color: black; text-decoration: none; padding: 10px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-	.navBtn.visible { opacity: 1; pointer-events: auto; }
+	:global(html),
+	:global(body) {
+		margin: 0;
+		padding: 0;
+		background: black;
+		color: #cccccc;
+		overflow-x: hidden;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
+	}
+	.hero {
+		box-sizing: border-box;
+		min-height: 100vh;
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 48px 24px 40px;
+		text-align: center;
+	}
+	.hero__logo {
+		display: block;
+		width: min(680px, 90vw);
+		height: auto;
+		max-height: 58vh;
+		object-fit: contain;
+	}
+	.hero__tagline {
+		margin: 28px 0 0;
+		max-width: 28em;
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 2px;
+		line-height: 1.5;
+		text-transform: uppercase;
+		color: #999999;
+	}
+	.hero__scroll-hint {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		margin-top: 56px;
+	}
+	.hero__scroll-label {
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: lowercase;
+		color: #666666;
+	}
+	.hero__scroll-arrow {
+		font-size: 1.25rem;
+		line-height: 1;
+		color: #666666;
+	}
+	.draw-section {
+		position: relative;
+		width: 100%;
+		height: 100vh;
+		height: 100dvh;
+	}
+	canvas {
+		display: block;
+		width: 100%;
+		height: 100%;
+		touch-action: none;
+	}
+	#submitBtn {
+		position: absolute;
+		left: 50%;
+		bottom: 48px;
+		transform: translateX(-50%);
+		z-index: 999999;
+		background: white;
+		color: black;
+		border: none;
+		border-radius: 999px;
+		padding: 16px 34px;
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		cursor: pointer;
+	}
+	.navBtn {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		z-index: 100000;
+		background: white;
+		color: black;
+		text-decoration: none;
+		padding: 10px 16px;
+		border-radius: 999px;
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.3s ease;
+	}
+	.navBtn.visible {
+		opacity: 1;
+		pointer-events: auto;
+	}
 </style>
 ```
 
 - [ ] **Step 4: Re-run Home e2e**
 
 Run:
+
 ```bash
 npm run test:e2e -- src/routes/arma-christi.e2e.ts
 ```
+
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -281,6 +414,7 @@ git commit -m "feat: migrate home page with drawing parity"
 ### Task 3: Build Gallery page in Svelte
 
 **Files:**
+
 - Create: `src/lib/gallery.ts`
 - Create: `src/lib/gallery.spec.ts`
 - Create: `src/routes/gallery/+page.svelte`
@@ -307,9 +441,11 @@ describe('mapArtworkDoc', () => {
 - [ ] **Step 2: Run unit test and confirm failure**
 
 Run:
+
 ```bash
 npm run test:unit -- src/lib/gallery.spec.ts
 ```
+
 Expected: FAIL because mapper does not exist yet.
 
 - [ ] **Step 3: Implement mapper and Gallery page**
@@ -368,21 +504,64 @@ export function mapArtworkDoc(data: Record<string, unknown>): ArtworkItem | null
 <a id="navHome" class="navBtn" href="/">Home</a>
 
 <style>
-	:global(html), :global(body) { margin: 0; padding: 0; background: black; overflow-x: hidden; }
-	#gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding: 20px; }
-	.artwork { width: 100%; background: #111; border-radius: 20px; overflow: hidden; }
-	.artwork img { width: 100%; display: block; }
-	.status { color: #cccccc; margin: 20px; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
-	.navBtn { position: fixed; top: 20px; left: 20px; z-index: 100000; background: white; color: black; text-decoration: none; padding: 10px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+	:global(html),
+	:global(body) {
+		margin: 0;
+		padding: 0;
+		background: black;
+		overflow-x: hidden;
+	}
+	#gallery {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 20px;
+		padding: 20px;
+	}
+	.artwork {
+		width: 100%;
+		background: #111;
+		border-radius: 20px;
+		overflow: hidden;
+	}
+	.artwork img {
+		width: 100%;
+		display: block;
+	}
+	.status {
+		color: #cccccc;
+		margin: 20px;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
+	}
+	.navBtn {
+		position: fixed;
+		top: 20px;
+		left: 20px;
+		z-index: 100000;
+		background: white;
+		color: black;
+		text-decoration: none;
+		padding: 10px 16px;
+		border-radius: 999px;
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+	}
 </style>
 ```
 
 - [ ] **Step 4: Run unit test and ensure pass**
 
 Run:
+
 ```bash
 npm run test:unit -- src/lib/gallery.spec.ts
 ```
+
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -395,6 +574,7 @@ git commit -m "feat: migrate gallery page with firestore loading"
 ### Task 4: Parity verification and docs
 
 **Files:**
+
 - Modify: `src/routes/arma-christi.e2e.ts`
 - Modify: `README.md`
 
@@ -414,11 +594,13 @@ test('navigates from home to gallery and back', async ({ page }) => {
 - [ ] **Step 2: Run quality checks**
 
 Run:
+
 ```bash
 npm run check
 npm run test:unit -- --run
 npm run test:e2e -- src/routes/arma-christi.e2e.ts
 ```
+
 Expected: all PASS.
 
 - [ ] **Step 3: Add README route note**
