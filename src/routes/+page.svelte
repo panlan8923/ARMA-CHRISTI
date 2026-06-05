@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { base, resolve } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
+	import HeroLogo from '$lib/components/HeroLogo.svelte';
 
 	const CANVAS_FILL = '#2a2a2a';
 
@@ -178,13 +179,7 @@
 </svelte:head>
 
 <header class="hero">
-	<img
-		src={`${base}/lettering.svg`}
-		alt="ARMA CHRISTI"
-		class="hero__logo"
-		width="574"
-		height="468"
-	/>
+	<HeroLogo />
 	<p class="hero__tagline">Scopri le realtà indipendenti di Perugia</p>
 	<div class="hero__scroll-hint" aria-hidden="true">
 		<span class="hero__scroll-label">inizia</span>
@@ -251,14 +246,6 @@
 		justify-content: center;
 		padding: 48px 24px 40px;
 		text-align: center;
-	}
-
-	.hero__logo {
-		display: block;
-		width: min(680px, 90vw);
-		height: auto;
-		max-height: 58vh;
-		object-fit: contain;
 	}
 
 	.hero__tagline {
