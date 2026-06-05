@@ -1,6 +1,6 @@
 export const DRAW_START_DELAY_MS = 500;
-export const DRAW_DURATION_MS = 2800;
-export const DRAW_EASE = 'inOutQuad';
+export const DRAW_DURATION_MS = 4500;
+export const DRAW_EASE = 'inOutSine';
 export const GHOST_OPACITY = 0.15;
 
 export function getInitialDraw(): `${number} ${number}` {

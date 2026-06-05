@@ -12,8 +12,8 @@ import {
 describe('hero-logo-animation', () => {
 	it('exports spec timing values', () => {
 		expect(DRAW_START_DELAY_MS).toBe(500);
-		expect(DRAW_DURATION_MS).toBe(2800);
-		expect(DRAW_EASE).toBe('inOutQuad');
+		expect(DRAW_DURATION_MS).toBe(4500);
+		expect(DRAW_EASE).toBe('inOutSine');
 		expect(GHOST_OPACITY).toBe(0.15);
 	});
 
