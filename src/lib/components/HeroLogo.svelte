@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { animate } from 'animejs';
 	import { createDrawable } from 'animejs/svg';
 	import armaChristiMarkup from '$lib/assets/arma-christi.svg?raw';
@@ -16,7 +16,9 @@
 	let root: HTMLDivElement;
 	let ghostEl: SVGGElement | null = null;
 
-	onMount(() => {
+	onMount(async () => {
+		await tick();
+
 		const trace = root.querySelector<SVGPathElement>('#tracciato');
 		if (!trace) return;
 
