@@ -41,6 +41,7 @@
 		"vitest-browser-svelte": "^2.1.0"
 	},
 	"dependencies": {
+		"animejs": "^4.4.1",
 		"firebase": "^12.13.0"
 	}
 }
