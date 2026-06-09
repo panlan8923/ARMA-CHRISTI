@@ -6,6 +6,7 @@
 	import HeroLogo from '$lib/components/HeroLogo.svelte';
 
 	const CANVAS_FILL = '#2a2a2a';
+	const LOSE_CONTROL_STROKE_SCALE = 0.35;
 
 	let canvas: HTMLCanvasElement;
 	let drawSection: HTMLElement;
@@ -15,6 +16,8 @@
 	let drawing = false;
 	let lastX = 0;
 	let lastY = 0;
+	let lastMouseX = 0;
+	let lastMouseY = 0;
 	let hasUnsavedChanges = false;
 	let isSubmitting = false;
 
@@ -22,6 +25,11 @@
 	let hasStartedDrawing = $state(false);
 	let submitLabel = $state('submit trace');
 	let submitDisabled = $state(false);
+	let loseControl = $state(false);
+
+	function toggleLoseControl() {
+		loseControl = !loseControl;
+	}
 
 	function resizeCanvas() {
 		const ctx = canvas.getContext('2d');
@@ -48,6 +56,8 @@
 		hasStartedDrawing = true;
 		lastX = pos.x;
 		lastY = pos.y;
+		lastMouseX = pos.x;
+		lastMouseY = pos.y;
 		hasUnsavedChanges = true;
 	}
 
@@ -64,6 +74,18 @@
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
+		const deltaX = pos.x - lastMouseX;
+		const deltaY = pos.y - lastMouseY;
+		lastMouseX = pos.x;
+		lastMouseY = pos.y;
+
+		const drawX = loseControl
+			? lastX - deltaX * LOSE_CONTROL_STROKE_SCALE
+			: pos.x;
+		const drawY = loseControl
+			? lastY - deltaY * LOSE_CONTROL_STROKE_SCALE
+			: pos.y;
+
 		const jitter = 10;
 		const offsetX = (Math.random() - 0.5) * jitter;
 		const offsetY = (Math.random() - 0.5) * jitter;
@@ -74,14 +96,14 @@
 		ctx.lineJoin = 'round';
 		ctx.beginPath();
 		ctx.moveTo(lastX, lastY);
-		ctx.lineTo(pos.x + offsetX, pos.y + offsetY);
+		ctx.lineTo(drawX + offsetX, drawY + offsetY);
 		ctx.stroke();
 
 		for (let i = 0; i < 8; i += 1) {
 			ctx.beginPath();
 			ctx.arc(
-				pos.x + (Math.random() - 0.5) * 24,
-				pos.y + (Math.random() - 0.5) * 24,
+				drawX + (Math.random() - 0.5) * 24,
+				drawY + (Math.random() - 0.5) * 24,
 				Math.random() * 2,
 				0,
 				Math.PI * 2
@@ -90,8 +112,8 @@
 			ctx.fill();
 		}
 
-		lastX = pos.x;
-		lastY = pos.y;
+		lastX = drawX;
+		lastY = drawY;
 	}
 
 	function startDrawingTouch(e: TouchEvent) {
@@ -208,7 +230,24 @@
 		>
 			Lascia il tuo segno
 		</p>
-		<button id="submitBtn" onclick={submitTrace} disabled={submitDisabled}>{submitLabel}</button>
+		<div class="draw-actions">
+			<button
+				type="button"
+				class="draw-action-btn"
+				class:draw-action-btn--active={loseControl}
+				onclick={toggleLoseControl}
+			>
+				lose control
+			</button>
+			<button
+				id="submitBtn"
+				class="draw-action-btn"
+				onclick={submitTrace}
+				disabled={submitDisabled}
+			>
+				{submitLabel}
+			</button>
+		</div>
 	</div>
 </section>
 
@@ -328,12 +367,19 @@
 		opacity: 0;
 	}
 
-	#submitBtn {
+	.draw-actions {
 		position: absolute;
 		left: 50%;
 		bottom: 32px;
 		transform: translateX(-50%);
 		z-index: 1;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px;
+	}
+
+	.draw-action-btn {
 		background: white;
 		color: black;
 		border: none;
@@ -344,6 +390,17 @@
 		letter-spacing: 2px;
 		text-transform: uppercase;
 		cursor: pointer;
+	}
+
+	.draw-action-btn--active {
+		background: black;
+		color: white;
+		outline: 2px solid white;
+	}
+
+	.draw-action-btn:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
 	}
 
 	.navBtn {
