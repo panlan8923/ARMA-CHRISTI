@@ -72,11 +72,6 @@
 		align-items: center;
 		justify-content: center;
 		gap: 24px;
-		font-family:
-			system-ui,
-			-apple-system,
-			'Segoe UI',
-			sans-serif;
 	}
 
 	.login-card {

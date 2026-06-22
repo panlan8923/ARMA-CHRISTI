@@ -268,11 +268,6 @@
 		background: black;
 		color: #cccccc;
 		overflow-x: hidden;
-		font-family:
-			system-ui,
-			-apple-system,
-			'Segoe UI',
-			sans-serif;
 	}
 
 	.hero {
