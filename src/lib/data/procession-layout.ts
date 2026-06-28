@@ -62,6 +62,50 @@ export const DESKTOP_CRONACHE_LOGO = {
 	height: 215.81
 } as const;
 
+/** Mobile layout from Figma frame "iPhone 13 & 14 - 1" (node 219:11), 390 px wide. */
+
+export const MOBILE_FRAME_WIDTH = 390;
+export const MOBILE_FRAME_HEIGHT = 2877;
+
+export const MOBILE_NAV = {
+	top: 20,
+	left: 21,
+	width: 349,
+	height: 65
+} as const;
+
+export const MOBILE_HERO = {
+	title: { top: 118, left: 21, width: 337, height: 250 },
+	date: { top: 319, left: 21 }
+} as const;
+
+export const MOBILE_PATH = {
+	axisX: 35,
+	top: 404,
+	height: 2160.5
+} as const;
+
+/** Figma ellipse frames are 20×20; `top` is the frame top, axis at x = 35. */
+export const MOBILE_NODE_CENTER_X = 35;
+export const MOBILE_NODE_FRAME_SIZE = 20;
+export const MOBILE_NODE_SIZE = 27;
+
+export const MOBILE_NODES = [
+	{ id: 'partenza', top: 384 },
+	{ id: 'becoming-x', top: 703 },
+	{ id: 'mannaggia', top: 1336 },
+	{ id: 'cronache-ribelli', top: 1969 },
+	{ id: 'arrivo', top: 2553 }
+] as const;
+
+export function mobileNodeAssetTop(frameTop: number): number {
+	return frameTop - (MOBILE_NODE_SIZE - MOBILE_NODE_FRAME_SIZE) / 2;
+}
+
+export function mobileNodeAssetLeft(): number {
+	return MOBILE_NODE_CENTER_X - MOBILE_NODE_SIZE / 2;
+}
+
 export const PROCESSION_UI = {
 	gridCross: '/processione/ui/grid-cross.svg',
 	arrow: '/processione/ui/procession-arrow.svg',

@@ -61,6 +61,19 @@
 		text-decoration: underline;
 	}
 
+	@media (max-width: 1279px) {
+		.procession-nav {
+			position: absolute;
+			top: 20px;
+			left: 21px;
+			width: 349px;
+			max-width: none;
+			height: 65px;
+			min-height: 65px;
+			margin: 0;
+		}
+	}
+
 	@media (min-width: 1280px) {
 		.procession-nav {
 			position: absolute;

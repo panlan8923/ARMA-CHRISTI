@@ -18,7 +18,8 @@ export interface ProcessionVenueStop {
 	};
 	footer?: {
 		time: string;
-		description: string[];
+		description: string;
+		moderator: string;
 	};
 }
 
@@ -125,10 +126,9 @@ export const PROCESSION_STOPS: ProcessionStop[] = [
 		},
 		footer: {
 			time: 'Ore: 20:00',
-			description: [
+			description:
 				'Intervento pubblico delle realtà indipendenti coinvolte: Becoming X, Mannaggia — Libreria Indipendente, Cronache Ribelli.',
-				'Modera: Daniela Mancarella'
-			]
+			moderator: 'Modera: Daniela Mancarella'
 		}
 	}
 ];
