@@ -20,6 +20,19 @@
 		type ProcessionVenueStop
 	} from '$lib/data/procession-stops';
 	import { createProcessionPathScope } from '$lib/procession-path-animation';
+	import { createProcessionStepsScope } from '$lib/procession-steps-animation';
+
+	const DESKTOP_STEP_REVEAL: Record<string, 'left' | 'right' | 'up'> = {
+		partenza: 'up',
+		'becoming-x': 'left',
+		mannaggia: 'right',
+		'cronache-ribelli': 'left',
+		arrivo: 'up'
+	};
+
+	function getDesktopStepReveal(stop: ProcessionStop): 'left' | 'right' | 'up' {
+		return DESKTOP_STEP_REVEAL[stop.id] ?? 'up';
+	}
 
 	let processionPage = $state<HTMLElement | null>(null);
 
@@ -46,10 +59,12 @@
 	onMount(() => {
 		if (!processionPage) return;
 
-		const scope = createProcessionPathScope(processionPage);
+		const pathScope = createProcessionPathScope(processionPage);
+		const stepsScope = createProcessionStepsScope(processionPage);
 
 		return () => {
-			scope.revert();
+			stepsScope.revert();
+			pathScope.revert();
 		};
 	});
 </script>
@@ -110,71 +125,82 @@
 
 			<ProcessionNodes />
 
-			{#each PROCESSION_STOPS as stop (stop.id)}
-				<article class="procession-stop" data-stop={stop.id}>
-					{#if isVenueStop(stop) && stop.side === 'right'}
-						<p class="procession-stop__label">{stop.label}</p>
-						<h2 class="procession-stop__venue-title">
-							{#each stop.title as line, index (index)}
-								<span>{line}</span>
-							{/each}
-						</h2>
-						<figure class="procession-stop__figure procession-stop__figure--departure">
-							<img src={`${base}${stop.image.src}`} alt={stop.image.alt} loading="lazy" />
-						</figure>
-						<p class="procession-stop__time procession-stop__time--departure">{stop.time}</p>
-					{:else if isVenueStop(stop) && stop.side === 'center'}
-						<div class="procession-stop__venue-copy procession-stop__venue-copy--center">
-							<p class="procession-stop__label">{stop.label}</p>
-							<h2 class="procession-stop__venue-title procession-stop__venue-title--single">
-								{stop.title[0]}
+			{#each PROCESSION_STOPS as stop, index (stop.id)}
+				<article
+					class="procession-stop"
+					data-stop={stop.id}
+					data-procession-step
+					data-procession-step-index={index + 1}
+					data-procession-reveal={getDesktopStepReveal(stop)}
+				>
+					<div class="procession-stop__content" data-procession-step-content>
+						{#if isVenueStop(stop) && stop.side === 'right'}
+							<p class="procession-stop__label" data-procession-step-anchor>{stop.label}</p>
+							<h2 class="procession-stop__venue-title">
+								{#each stop.title as line, index (index)}
+									<span>{line}</span>
+								{/each}
 							</h2>
-						</div>
-						<figure class="procession-stop__figure procession-stop__figure--arrival">
-							<img src={`${base}${stop.image.src}`} alt={stop.image.alt} loading="lazy" />
-						</figure>
-						{#if stop.footer}
-							<footer class="procession-stop__arrival-footer">
-								<p class="procession-stop__time">{stop.footer.time}</p>
-								<div class="arrival-description">
-									<p class="arrival-description__text" lang="it">{stop.footer.description}</p>
-									<p class="arrival-description__moderator">{stop.footer.moderator}</p>
-								</div>
-							</footer>
-						{/if}
-					{:else if isEntityStop(stop)}
-						{#if stop.image}
-							<figure
-								class="procession-stop__figure procession-stop__figure--entity"
-								data-stop-image={stop.id}
-							>
+							<figure class="procession-stop__figure procession-stop__figure--departure">
 								<img src={`${base}${stop.image.src}`} alt={stop.image.alt} loading="lazy" />
 							</figure>
-						{:else if stop.logo}
-							<figure class="procession-stop__figure procession-stop__figure--logo">
-								<img src={`${base}${stop.logo.src}`} alt={stop.logo.alt} loading="lazy" />
-							</figure>
-						{/if}
-
-						<h2 class="procession-stop__entity-title">{stop.title}</h2>
-						<p class="procession-stop__entity-subtitle">{stop.subtitle}</p>
-						<p class="procession-stop__entity-description" lang="it">{stop.description}</p>
-						<div class="procession-stop__links">
-							<span class="procession-stop__link-arrow" aria-hidden="true">
-								<ProcessionArrow />
-							</span>
-							<div class="procession-stop__link-lines">
-								{#each stop.links as link (`${link.href ?? 'text'}-${link.text}`)}
-									{#if link.href}
-										<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- external venue links -->
-										<a href={link.href} target="_blank" rel="noopener noreferrer">{link.text}</a>
-									{:else}
-										<span class="procession-stop__link-line">{link.text}</span>
-									{/if}
-								{/each}
+							<p class="procession-stop__time procession-stop__time--departure">{stop.time}</p>
+						{:else if isVenueStop(stop) && stop.side === 'center'}
+							<div
+								class="procession-stop__venue-copy procession-stop__venue-copy--center"
+								data-procession-step-anchor
+							>
+								<p class="procession-stop__label">{stop.label}</p>
+								<h2 class="procession-stop__venue-title procession-stop__venue-title--single">
+									{stop.title[0]}
+								</h2>
 							</div>
-						</div>
-					{/if}
+							<figure class="procession-stop__figure procession-stop__figure--arrival">
+								<img src={`${base}${stop.image.src}`} alt={stop.image.alt} loading="lazy" />
+							</figure>
+							{#if stop.footer}
+								<footer class="procession-stop__arrival-footer">
+									<p class="procession-stop__time">{stop.footer.time}</p>
+									<div class="arrival-description">
+										<p class="arrival-description__text" lang="it">{stop.footer.description}</p>
+										<p class="arrival-description__moderator">{stop.footer.moderator}</p>
+									</div>
+								</footer>
+							{/if}
+						{:else if isEntityStop(stop)}
+							{#if stop.image}
+								<figure
+									class="procession-stop__figure procession-stop__figure--entity"
+									data-stop-image={stop.id}
+								>
+									<img src={`${base}${stop.image.src}`} alt={stop.image.alt} loading="lazy" />
+								</figure>
+							{:else if stop.logo}
+								<figure class="procession-stop__figure procession-stop__figure--logo">
+									<img src={`${base}${stop.logo.src}`} alt={stop.logo.alt} loading="lazy" />
+								</figure>
+							{/if}
+
+							<h2 class="procession-stop__entity-title" data-procession-step-anchor>{stop.title}</h2>
+							<p class="procession-stop__entity-subtitle">{stop.subtitle}</p>
+							<p class="procession-stop__entity-description" lang="it">{stop.description}</p>
+							<div class="procession-stop__links">
+								<span class="procession-stop__link-arrow" aria-hidden="true">
+									<ProcessionArrow />
+								</span>
+								<div class="procession-stop__link-lines">
+									{#each stop.links as link (`${link.href ?? 'text'}-${link.text}`)}
+										{#if link.href}
+											<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- external venue links -->
+											<a href={link.href} target="_blank" rel="noopener noreferrer">{link.text}</a>
+										{:else}
+											<span class="procession-stop__link-line">{link.text}</span>
+										{/if}
+									{/each}
+								</div>
+							</div>
+						{/if}
+					</div>
 				</article>
 			{/each}
 		</section>
@@ -221,6 +247,16 @@
 	.procession-canvas__path--desktop,
 	.procession-canvas__path--mobile {
 		display: none;
+	}
+
+	.procession-stop__content {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.procession-stop__content > * {
+		pointer-events: auto;
 	}
 
 	.procession-stop__label {
@@ -413,10 +449,6 @@
 			margin: 0;
 			z-index: 2;
 			pointer-events: none;
-		}
-
-		.procession-stop > * {
-			pointer-events: auto;
 		}
 
 		/* Step 01 — Partenza */
@@ -703,10 +735,6 @@
 			gap: 0;
 			z-index: 2;
 			pointer-events: none;
-		}
-
-		.procession-stop > * {
-			pointer-events: auto;
 		}
 
 		/* Step 01 — Partenza */
