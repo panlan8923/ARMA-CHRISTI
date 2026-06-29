@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import ProcessionArrow from '$lib/components/ProcessionArrow.svelte';
 	import ProcessionGrid from '$lib/components/ProcessionGrid.svelte';
@@ -18,6 +19,9 @@
 		type ProcessionStop,
 		type ProcessionVenueStop
 	} from '$lib/data/procession-stops';
+	import { createProcessionPathScope } from '$lib/procession-path-animation';
+
+	let processionPage = $state<HTMLElement | null>(null);
 
 	function isEntityStop(stop: ProcessionStop): stop is ProcessionEntityStop {
 		return stop.kind === 'entity';
@@ -38,6 +42,16 @@
 	const mobileScalerHeight = $derived(
 		mobileScale < 1 ? MOBILE_FRAME_HEIGHT * mobileScale : MOBILE_FRAME_HEIGHT
 	);
+
+	onMount(() => {
+		if (!processionPage) return;
+
+		const scope = createProcessionPathScope(processionPage);
+
+		return () => {
+			scope.revert();
+		};
+	});
 </script>
 
 <svelte:window bind:innerWidth={viewportWidth} />
@@ -58,7 +72,9 @@
 	style:height={mobileScale < 1 ? `${mobileScalerHeight}px` : undefined}
 >
 	<main
+		bind:this={processionPage}
 		class="procession-page"
+		data-procession-page
 		style:--frame-height="{DESKTOP_FRAME_HEIGHT}px"
 		style:--mobile-frame-height="{MOBILE_FRAME_HEIGHT}px"
 		style:transform={mobileScale < 1 ? `scale(${mobileScale})` : undefined}
@@ -75,11 +91,20 @@
 		<section class="procession-canvas" aria-label="Percorso della processione">
 			<ProcessionGrid />
 
-			<div class="procession-canvas__path procession-canvas__path--desktop" aria-hidden="true">
+			<div
+				class="procession-canvas__path procession-canvas__path--desktop"
+				data-procession-layout="desktop"
+				aria-hidden="true"
+			>
+				<div data-procession-scroll-range aria-hidden="true"></div>
 				<ProcessionPath />
 			</div>
 
-			<div class="procession-canvas__path procession-canvas__path--mobile" aria-hidden="true">
+			<div
+				class="procession-canvas__path procession-canvas__path--mobile"
+				data-procession-layout="mobile"
+				aria-hidden="true"
+			>
 				<ProcessionPathMobile />
 			</div>
 
@@ -655,6 +680,14 @@
 			margin: 0;
 			transform: translateX(-50%);
 			z-index: 1;
+		}
+
+		.procession-canvas__path--desktop [data-procession-scroll-range] {
+			position: absolute;
+			inset: 0;
+			width: 1px;
+			pointer-events: none;
+			visibility: hidden;
 		}
 
 		.procession-canvas__path--desktop :global(.procession-path-svg) {

@@ -15,6 +15,13 @@
 </script>
 
 <div class="procession-path-mobile" aria-hidden="true">
+	<div
+		class="procession-path-mobile__scroll-range"
+		data-procession-scroll-range
+		style:top="{pathTop}px"
+		style:height="{pathHeight}px"
+	></div>
+
 	<svg
 		class="procession-path-mobile__svg"
 		viewBox="0 0 {MOBILE_FRAME_WIDTH} {pathHeight}"
@@ -24,16 +31,17 @@
 	>
 		<line
 			class="procession-path-mobile__line procession-path-mobile__line--dotted"
+			data-procession-dotted-path
 			x1={axisX}
 			y1="0"
 			x2={axisX}
 			y2={pathHeight}
 			stroke="#CCCCCC"
 			stroke-width="4"
-			stroke-dasharray="1 10"
 		/>
 		<line
 			class="procession-path-mobile__line procession-path-mobile__line--solid"
+			data-procession-progress-path
 			x1={axisX}
 			y1="0"
 			x2={axisX}
@@ -64,6 +72,14 @@
 		z-index: 1;
 	}
 
+	.procession-path-mobile__scroll-range {
+		position: absolute;
+		left: 0;
+		width: 1px;
+		pointer-events: none;
+		visibility: hidden;
+	}
+
 	.procession-path-mobile__svg {
 		position: absolute;
 		left: 0;
@@ -75,6 +91,11 @@
 
 	.procession-path-mobile__line {
 		vector-effect: non-scaling-stroke;
+	}
+
+	.procession-path-mobile__line--dotted {
+		stroke-dasharray: 0 10;
+		stroke-linecap: round;
 	}
 
 	.procession-path-mobile__node {

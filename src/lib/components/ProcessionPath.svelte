@@ -15,14 +15,15 @@
 >
 	<path
 		class="procession-path procession-path--dotted"
+		data-procession-dotted-path
 		d={PATH_D}
 		stroke="#CCCCCC"
 		stroke-width="4"
-		stroke-dasharray="1 10"
 	/>
 	<path
 		class="procession-path procession-path--trace"
 		id="procession-trace"
+		data-procession-progress-path
 		d={PATH_D}
 		stroke="#CCCCCC"
 		stroke-width="4"
@@ -38,5 +39,10 @@
 
 	.procession-path {
 		fill: none;
+	}
+
+	.procession-path--dotted {
+		stroke-dasharray: 0 10;
+		stroke-linecap: round;
 	}
 </style>
