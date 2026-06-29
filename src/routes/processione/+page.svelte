@@ -3,7 +3,7 @@
 	import { base } from '$app/paths';
 	import ProcessionArrow from '$lib/components/ProcessionArrow.svelte';
 	import ProcessionGrid from '$lib/components/ProcessionGrid.svelte';
-	import ProcessionNav from '$lib/components/ProcessionNav.svelte';
+	import SiteNav from '$lib/components/SiteNav.svelte';
 	import ProcessionNodes from '$lib/components/ProcessionNodes.svelte';
 	import ProcessionPath from '$lib/components/ProcessionPath.svelte';
 	import ProcessionPathMobile from '$lib/components/ProcessionPathMobile.svelte';
@@ -73,12 +73,6 @@
 
 <svelte:head>
 	<title>ARMA CHRISTI — Processione</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-		rel="stylesheet"
-	/>
 </svelte:head>
 
 <div
@@ -95,7 +89,7 @@
 		style:transform={mobileScale < 1 ? `scale(${mobileScale})` : undefined}
 		style:transform-origin={mobileScale < 1 ? 'top left' : undefined}
 	>
-		<ProcessionNav current="processione" />
+		<SiteNav current="processione" />
 
 		<h1 class="procession-hero__title">
 			<span>Arma</span>
@@ -181,7 +175,9 @@
 								</figure>
 							{/if}
 
-							<h2 class="procession-stop__entity-title" data-procession-step-anchor>{stop.title}</h2>
+							<h2 class="procession-stop__entity-title" data-procession-step-anchor>
+								{stop.title}
+							</h2>
 							<p class="procession-stop__entity-subtitle">{stop.subtitle}</p>
 							<p class="procession-stop__entity-description" lang="it">{stop.description}</p>
 							<div class="procession-stop__links">
@@ -437,6 +433,7 @@
 			position: absolute;
 			inset: 0;
 			height: var(--mobile-frame-height);
+			pointer-events: none;
 		}
 
 		.procession-canvas__path--mobile {

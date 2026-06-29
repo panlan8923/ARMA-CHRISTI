@@ -2,11 +2,31 @@
 	import { base } from '$app/paths';
 	import { DESKTOP_GRID_MARKS, PROCESSION_UI } from '$lib/data/procession-layout';
 
+	interface Props {
+		/** Visible grid rows from the top; defaults to the full procession frame (7 rows). */
+		rows?: number;
+	}
+
+	let { rows }: Props = $props();
+
 	const gridCrossSrc = `${base}${PROCESSION_UI.gridCross}`;
+
+	const rowTops = [...new Set(DESKTOP_GRID_MARKS.map((mark) => mark.top))].sort(
+		(a, b) => a - b
+	);
+
+	const marks = $derived.by(() => {
+		if (rows === undefined) {
+			return DESKTOP_GRID_MARKS;
+		}
+
+		const allowedTops = new Set(rowTops.slice(0, rows));
+		return DESKTOP_GRID_MARKS.filter((mark) => allowedTops.has(mark.top));
+	});
 </script>
 
 <div class="procession-grid" aria-hidden="true">
-	{#each DESKTOP_GRID_MARKS as mark, index (index)}
+	{#each marks as mark, index (index)}
 		<img
 			class="procession-grid__mark"
 			src={gridCrossSrc}

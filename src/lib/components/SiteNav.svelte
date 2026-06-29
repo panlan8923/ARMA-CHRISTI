@@ -2,38 +2,43 @@
 	import { resolve } from '$app/paths';
 
 	interface Props {
-		current?: 'home' | 'processione' | 'archivio';
+		current?: 'home' | 'processione' | 'progetto';
+		layout?: 'frame' | 'viewport';
 	}
 
-	let { current = 'processione' }: Props = $props();
+	let { current = 'processione', layout = 'frame' }: Props = $props();
 </script>
 
-<nav class="procession-nav" aria-label="Navigazione principale">
+<nav
+	class="site-nav"
+	class:site-nav--viewport={layout === 'viewport'}
+	aria-label="Navigazione principale"
+>
 	<a
-		class="procession-nav__link"
+		class="site-nav__link"
 		href={resolve('/')}
 		aria-current={current === 'home' ? 'page' : undefined}
 	>
 		Home
 	</a>
 	<a
-		class="procession-nav__link"
+		class="site-nav__link"
 		href={resolve('/processione')}
 		aria-current={current === 'processione' ? 'page' : undefined}
 	>
 		Processione
 	</a>
 	<a
-		class="procession-nav__link"
-		href={resolve('/gallery')}
-		aria-current={current === 'archivio' ? 'page' : undefined}
+		class="site-nav__link"
+		href={resolve('/progetto')}
+		aria-current={current === 'progetto' ? 'page' : undefined}
 	>
-		Archivio
+		Progetto
 	</a>
 </nav>
 
 <style>
-	.procession-nav {
+	.site-nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -45,24 +50,33 @@
 		font-weight: 400;
 		line-height: normal;
 		color: #cccccc;
+		position: relative;
+		z-index: 100;
+		pointer-events: auto;
 	}
 
-	.procession-nav__link {
+	.site-nav__link {
 		color: inherit;
 		text-decoration: none;
+		position: relative;
+		z-index: 1;
+		pointer-events: auto;
+		display: inline-flex;
+		align-items: center;
+		min-height: 32px;
 	}
 
-	.procession-nav__link:hover,
-	.procession-nav__link:focus-visible {
+	.site-nav__link:hover,
+	.site-nav__link:focus-visible {
 		text-decoration: underline;
 	}
 
-	.procession-nav__link[aria-current='page'] {
+	.site-nav__link[aria-current='page'] {
 		text-decoration: underline;
 	}
 
 	@media (max-width: 1279px) {
-		.procession-nav {
+		.site-nav {
 			position: absolute;
 			top: 20px;
 			left: 21px;
@@ -71,11 +85,19 @@
 			height: 65px;
 			min-height: 65px;
 			margin: 0;
+			z-index: 100;
+		}
+
+		.site-nav--viewport {
+			position: fixed;
+			right: 21px;
+			width: auto;
+			z-index: 100;
 		}
 	}
 
 	@media (min-width: 1280px) {
-		.procession-nav {
+		.site-nav {
 			position: absolute;
 			top: 20px;
 			left: calc(50% + 0.5px);
@@ -84,6 +106,13 @@
 			margin: 0;
 			transform: translateX(-50%);
 			z-index: 10;
+		}
+
+		.site-nav--viewport {
+			position: fixed;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 100;
 		}
 	}
 </style>
