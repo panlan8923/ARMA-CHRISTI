@@ -191,11 +191,6 @@
 		background: rgba(17, 17, 17, 0.95);
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		border-radius: 999px;
-		font-family:
-			system-ui,
-			-apple-system,
-			'Segoe UI',
-			sans-serif;
 		font-size: 13px;
 		color: #ddd;
 	}
@@ -341,11 +336,6 @@
 		grid-column: 1 / -1;
 		color: #cccccc;
 		margin: 20px;
-		font-family:
-			system-ui,
-			-apple-system,
-			'Segoe UI',
-			sans-serif;
 	}
 
 	.confirm-backdrop {
@@ -367,11 +357,6 @@
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		border-radius: 20px;
 		color: white;
-		font-family:
-			system-ui,
-			-apple-system,
-			'Segoe UI',
-			sans-serif;
 	}
 
 	.confirm-dialog h2 {

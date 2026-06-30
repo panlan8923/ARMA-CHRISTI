@@ -1,0 +1,11 @@
+html,
+body {
+	font-family: Inter, Arial, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+	font-family: inherit;
+}

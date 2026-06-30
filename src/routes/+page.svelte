@@ -4,6 +4,7 @@
 	import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 	import HeroLogo from '$lib/components/HeroLogo.svelte';
+	import SiteNav from '$lib/components/SiteNav.svelte';
 
 	const CANVAS_FILL = '#2a2a2a';
 	const LOSE_CONTROL_STROKE_SCALE = 0.35;
@@ -79,12 +80,8 @@
 		lastMouseX = pos.x;
 		lastMouseY = pos.y;
 
-		const drawX = loseControl
-			? lastX - deltaX * LOSE_CONTROL_STROKE_SCALE
-			: pos.x;
-		const drawY = loseControl
-			? lastY - deltaY * LOSE_CONTROL_STROKE_SCALE
-			: pos.y;
+		const drawX = loseControl ? lastX - deltaX * LOSE_CONTROL_STROKE_SCALE : pos.x;
+		const drawY = loseControl ? lastY - deltaY * LOSE_CONTROL_STROKE_SCALE : pos.y;
 
 		const jitter = 10;
 		const offsetX = (Math.random() - 0.5) * jitter;
@@ -200,6 +197,8 @@
 	<title>ARMA CHRISTI</title>
 </svelte:head>
 
+<SiteNav current="home" layout="viewport" />
+
 <header class="hero">
 	<HeroLogo />
 	<p class="hero__tagline">Scopri le realtà indipendenti di Perugia</p>
@@ -268,11 +267,6 @@
 		background: black;
 		color: #cccccc;
 		overflow-x: hidden;
-		font-family:
-			system-ui,
-			-apple-system,
-			'Segoe UI',
-			sans-serif;
 	}
 
 	.hero {
